@@ -1,5 +1,7 @@
 # Advent of code 2024
 
+2024 edition in V or C or both 😅
+
 ## Commands
 
 - Create a new day : `make create DAY=dx`
