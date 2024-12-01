@@ -68,5 +68,9 @@ int p1_distance(const char *file) {
   for( size_t i = 0 ; i < count ; i++) {
      result += abs(l_array[i] - r_array[i]);
   }
+
+  free(l_array);
+  free(r_array);
+  
   return result;
 }
