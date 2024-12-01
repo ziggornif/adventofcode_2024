@@ -3,14 +3,39 @@ import os
 import math
 import arrays
 
-fn parse(line string) (int, int) {
+fn parse_line(line string) (int, int) {
 	arr := line.split('   ')
 	return arr[0].i32(), arr[1].i32()
 }
 
-fn distance(l int, r int) int {
-	println("left ${l} right ${r} distance : ${math.abs(r-l)}")
-	return math.abs(r - l)
+fn parse_file(path string) ([]int, []int) {
+	mut left_arr := []int{}
+	mut right_arr := []int{}
+
+	lines := os.read_lines('./input.txt') or {
+        eprintln('File not found, continuing with an empty array.')
+        []string{}
+    }
+
+	for line in lines {
+		l, r := parse_line(line)
+		left_arr.insert(left_arr.len, l)
+		right_arr.insert(right_arr.len, r)
+	}
+
+	left_arr.sort()
+	right_arr.sort()
+
+	return left_arr, right_arr
+}
+
+fn distance(left_arr []int, right_arr []int) int {
+	mut result := 0
+	for i in 0..left_arr.len {
+		// println("left ${left_arr[i]} right ${right_arr[i]} distance : ${math.abs(right_arr[i]-left_arr[i])}")
+		result += math.abs(right_arr[i] - left_arr[i])
+	}
+	return result
 }
 
 fn similarity(left_arr []int, right_arr []int) int{
@@ -18,7 +43,7 @@ fn similarity(left_arr []int, right_arr []int) int{
 	r_map := arrays.map_of_counts(right_arr)
 	for val in left_arr {
 		if val in r_map {
-			println("val ${val} r_map[val] ${r_map[val]} added ${val * r_map[val]}")
+			// println("val ${val} r_map[val] ${r_map[val]} added ${val * r_map[val]}")
 			result += val * r_map[val]
 		}
 	}
@@ -26,23 +51,10 @@ fn similarity(left_arr []int, right_arr []int) int{
 }
 
 fn main() {
-	mut result := 0
-	mut left_arr := []int{}
-	mut right_arr := []int{}
+	left_arr, right_arr := parse_file('./input.txt')
 
-	lines := os.read_lines('./input.txt')!
-	for line in lines {
-		l, r := parse(line)
-		left_arr.insert(left_arr.len, l)
-		right_arr.insert(right_arr.len, r)
-	}
-	left_arr.sort()
-	right_arr.sort()
-	for i in 0..left_arr.len {
-		result += distance(left_arr[i], right_arr[i])
-	}
-	println('Result p1: ${result}')
-
-	result = similarity(left_arr, right_arr)
-	println('Result p2: ${result}')
+	result_p1 := distance(left_arr, right_arr)
+	println('Result p1: ${result_p1}')
+	result_p2 := similarity(left_arr, right_arr)
+	println('Result p2: ${result_p2}')
 }
