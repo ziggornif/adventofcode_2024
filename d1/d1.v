@@ -13,9 +13,9 @@ fn parse_file(path string) ([]int, []int) {
 	mut right_arr := []int{}
 
 	lines := os.read_lines('./input.txt') or {
-        eprintln('File not found, continuing with an empty array.')
-        []string{}
-    }
+		eprintln('File not found, continuing with an empty array.')
+		[]string{}
+	}
 
 	for line in lines {
 		l, r := parse_line(line)
