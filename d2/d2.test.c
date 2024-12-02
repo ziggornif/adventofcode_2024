@@ -1,9 +1,10 @@
-#include <stdio.h>
-#include <assert.h>
 #include "d2.h"
 
+#include <assert.h>
+#include <stdio.h>
+
 int main() {
-  const char *file = "d2/input_test.txt";
+  const char *file = "d2/input.txt";
   int resp1 = p1_safe_reports(file);
   printf("Result p1: %d\n", resp1);
   int resp2 = p2_safe_reports(file);
