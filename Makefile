@@ -14,7 +14,7 @@ create:
 # Compile and run tests
 # Usage: make test DAY=d1
 test:
-	$(CC) $(CFLAGS) $(DAY)/$(DAY).c $(DAY)/$(DAY).test.c -o $(DAY)/$(TARGET)
+	cd $(DAY) && $(CC) $(CFLAGS) $(DAY).c $(DAY).test.c ../utils/file.c -I ../utils -o $(TARGET)
 	./$(DAY)/$(TARGET)
 
 # Clean output files
