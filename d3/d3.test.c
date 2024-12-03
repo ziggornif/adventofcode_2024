@@ -1,8 +1,13 @@
-#include <stdio.h>
-#include <assert.h>
 #include "d3.h"
 
+#include <assert.h>
+#include <stdio.h>
+
 int main() {
-  printf("Add tests here !");
+  const char *file = "d3/input.txt";
+  int resp1 = p1_mull(file);
+  printf("Result p1: %d\n", resp1);
+  // int resp2 = p2_mull(file);
+  // printf("Result p2: %d\n", resp2);
   return 0;
 }

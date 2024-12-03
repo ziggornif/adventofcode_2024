@@ -43,3 +43,28 @@ char **parse_file(const char *path, size_t *size_out) {
   fclose(file);
   return lines;
 }
+
+char *read_file(const char *path) {
+  FILE *file = fopen(path, "r");
+  if (!file) {
+    fprintf(stderr, "File not found.\n");
+    return NULL;
+  }
+
+  fseek(file, 0, SEEK_END);
+  long file_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  char *content = malloc(file_size + 1);
+  if (!content) {
+    fprintf(stderr, "Memory allocation failed.\n");
+    fclose(file);
+    return NULL;
+  }
+
+  fread(content, 1, file_size, file);
+  content[file_size] = '\0';
+
+  fclose(file);
+  return content;
+}

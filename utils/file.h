@@ -1,5 +1,5 @@
-#ifndef d1_H
-#define d1_H
+#ifndef file_H
+#define file_H
 
 #include <stddef.h>
 #include <stdio.h>
@@ -8,5 +8,6 @@
 
 size_t count_lines(const char *path);
 char **parse_file(const char *path, size_t *size_out);
+char *read_file(const char *path);
 
 #endif
