@@ -30,16 +30,15 @@ int p1_mull(const char *input_file) {
   int match = 0;
   int result = 0;
   while (match == 0) {
-    size_t nmatch = 0;
+    size_t nmatch = 3;
     regmatch_t *pmatch = NULL;
-    nmatch = 3;
     pmatch = malloc(sizeof(*pmatch) * nmatch);
 
-    match = regexec(&preg, content, 3, pmatch, 0);
-    int v1 = parse_val(pmatch, 1, content);
-    int v2 = parse_val(pmatch, 2, content);
+    match = regexec(&preg, content, nmatch, pmatch, 0);
+    int l = parse_val(pmatch, 1, content);
+    int r = parse_val(pmatch, 2, content);
 
-    result += v1 * v2;
+    result += l * r;
     content += pmatch[0].rm_eo;
   }
 
