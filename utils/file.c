@@ -8,7 +8,7 @@ size_t count_lines(const char *path) {
   }
 
   size_t lines = 0;
-  char buffer[32];
+  char buffer[256];
   while (fgets(buffer, sizeof(buffer), file)) {
     lines++;
   }
@@ -32,7 +32,7 @@ char **parse_file(const char *path, size_t *size_out) {
 
   char **lines = malloc(*size_out * sizeof(char *));
 
-  char line[32];
+  char line[256];
   size_t index = 0;
   while (fgets(line, sizeof(line), file) && index < *size_out) {
     line[strcspn(line, "\n")] = '\0';
