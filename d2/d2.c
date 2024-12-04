@@ -55,7 +55,7 @@ int p1_safe_reports(const char *file) {
       result++;
     }
   }
-  free(lines);
+  free_char_array(lines, size);
   return result;
 }
 
@@ -111,6 +111,6 @@ int p2_safe_reports(const char *file) {
       }
     }
   }
-  free(lines);
+  free_char_array(lines, size);
   return result;
 }

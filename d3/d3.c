@@ -43,5 +43,6 @@ int p1_mull(const char *input_file) {
   }
 
   regfree(&preg);
+  free(content);
   return result;
 }

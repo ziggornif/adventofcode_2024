@@ -57,5 +57,38 @@ int p1_find_xmas(const char *input_file) {
       }
     }
   }
+  free_char_array(lines, size);
+  return result;
+}
+
+int check_x_pattern(char **lines, size_t x, size_t y, char t_left, char t_right,
+                    char b_left, char b_right) {
+  return (lines[x - 1][y - 1] == t_left && lines[x - 1][y + 1] == t_right &&
+          lines[x + 1][y - 1] == b_left && lines[x + 1][y + 1] == b_right);
+}
+
+int p2_find_x_mas(const char *input_file) {
+  size_t size = 0;
+  char **lines = parse_file(input_file, &size);
+  if (!lines) {
+    fprintf(stderr, "Failed to parse file.\n");
+    return -1;
+  }
+
+  int result = 0;
+  for (size_t i = 1; i < size - 1; i++) {
+    size_t line_len = strlen(lines[i]);
+    for (size_t j = 1; j < line_len - 1; j++) {
+      if (lines[i][j] == 'A') {
+        if (check_x_pattern(lines, i, j, 'M', 'S', 'M', 'S') ||
+            check_x_pattern(lines, i, j, 'M', 'M', 'S', 'S') ||
+            check_x_pattern(lines, i, j, 'S', 'S', 'M', 'M') ||
+            check_x_pattern(lines, i, j, 'S', 'M', 'S', 'M')) {
+          result++;
+        }
+      }
+    }
+  }
+  free_char_array(lines, size);
   return result;
 }
