@@ -1,18 +1,79 @@
 #include "d5.h"
 
-int p1_updates(const char *input_order_file, const char *input_updates_file) {
+int validate_line(int *line, int line_length, rules_node_t *rules_list,
+                  int *mid_index) {
+  int valid = 0;
+  for (int i = 0; i < line_length; i++) {
+    if (line[i] == -1) {
+      *mid_index = (i - 1) / 2;
+      break;
+    }
+    rule_item_t rule = {.key = line[i]};
+    rules_node_t *found = find_rule(rules_list, rule);
+    if (!found) continue;
+
+    int_node_t *current = found->val.rules;
+    while (current != NULL) {
+      for (int k = i + 1; k < line_length; k++) {
+        if (current->val == line[k]) {
+          valid = 1;
+          break;
+        }
+      }
+      if (valid) {
+        break;
+      }
+      current = current->next;
+    }
+  }
+  if (valid == 0) {
+    if (*mid_index == 0) {
+      *mid_index = line_length / 2;
+    }
+    printf("Line is valid and mid is %d\n", *mid_index);
+  }
+  return valid;
+}
+
+int *reorder_line(int *line, int line_length, rules_node_t *rules_list) {
+  for (int i = 0; i < line_length; i++) {
+    if (line[i] == -1) {
+      break;
+    }
+    rule_item_t rule = {.key = line[i]};
+    rules_node_t *found = find_rule(rules_list, rule);
+    if (!found) continue;
+
+    int_node_t *current = found->val.rules;
+    while (current != NULL) {
+      for (int k = i + 1; k < line_length; k++) {
+        if (current->val == line[k]) {
+          int tmp = line[i];
+          line[i] = line[k];
+          line[k] = tmp;
+          break;
+        }
+      }
+      current = current->next;
+    }
+  }
+  return line;
+}
+
+void lines_updates(const char *input_order_file,
+                   const char *input_updates_file) {
   size_t order_size = 0;
   size_t updates_size = 0;
   char **order_array = parse_file(input_order_file, &order_size);
   if (!order_array) {
     fprintf(stderr, "Failed to parse input_order_file.\n");
-    return -1;
+    return;
   }
 
   char **updates_array = parse_file(input_updates_file, &updates_size);
   if (!updates_array) {
     fprintf(stderr, "Failed to parse input_order_file.\n");
-    return -1;
+    return;
   };
 
   int updates_length = 23;
@@ -60,41 +121,24 @@ int p1_updates(const char *input_order_file, const char *input_updates_file) {
   pop_rule(&rules_list);
 
   int result = 0;
+  int invalid_res = 0;
   for (size_t i = 0; i < updates_size; i++) {
-    int valid = 0;
     int mid_index = 0;
-    for (int j = 0; j < updates_length; j++) {
-      if (updates[i][j] == -1) {
-        mid_index = (j - 1) / 2;
-        break;
-      }
-      rule_item_t rule = {.key = updates[i][j]};
-      rules_node_t *found = find_rule(rules_list, rule);
-      if (!found) continue;
-
-      int_node_t *current = found->val.rules;
-      while (current != NULL) {
-        for (int k = j + 1; k < updates_length; k++) {
-          if (current->val == updates[i][k]) {
-            valid = 1;
-            break;
-          }
-        }
-        if (valid) {
-          break;
-        }
-        current = current->next;
-      }
-    }
+    int valid =
+        validate_line(updates[i], updates_length, rules_list, &mid_index);
     if (valid == 0) {
-      if (mid_index == 0) {
-        mid_index = updates_length / 2;
-      }
-      printf("Line is valid: %zu. the middle page number is %d\n", i,
-             mid_index);
       result += updates[i][mid_index];
+    } else {
+      printf("Line is invalid let's reorder: %zu\n", i);
+      int *reordered_line = NULL;
+      reordered_line = reorder_line(updates[i], updates_length, rules_list);
+      while (validate_line(reordered_line, updates_length, rules_list,
+                           &mid_index) == 1) {
+        reordered_line =
+            reorder_line(reordered_line, updates_length, rules_list);
+      }
+      invalid_res += reordered_line[mid_index];
     }
   }
-
-  return result;
+  printf("P1 Result : %d\nP2 Result: %d\n", result, invalid_res);
 }

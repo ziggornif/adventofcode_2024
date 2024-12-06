@@ -13,6 +13,7 @@ struct RuleMap {
 
 typedef struct RuleMap RuleMap;
 
-int p1_updates(const char *input_order_file, const char *input_updates_file);
+void lines_updates(const char *input_order_file,
+                   const char *input_updates_file);
 
 #endif
